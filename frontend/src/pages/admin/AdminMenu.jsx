@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import api, { errorMessage, money } from '../../api'
+import { Flame, Leaf } from 'lucide-react'
 
 const EMPTY = { category_id: '', name: '', description: '', price: '', image: '', spicy: false, vegetarian: false, available: true }
 
@@ -110,7 +111,9 @@ export default function AdminMenu() {
                   {list.map((d) => (
                     <tr key={d.id} className={d.available ? '' : 'disabled'}>
                       <td>
-                        <strong>{d.name}</strong> {d.spicy && '🌶'} {d.vegetarian && '🌿'}
+                        <strong>{d.name}</strong>{' '}
+                        {d.spicy && <Flame size={14} className="icon-spicy" />}{' '}
+                        {d.vegetarian && <Leaf size={14} className="icon-veg" />}
                         <div className="muted small">{d.description}</div>
                       </td>
                       <td className="nowrap">{money(d.price)}</td>

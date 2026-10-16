@@ -1,5 +1,6 @@
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { Lock } from 'lucide-react'
 
 export default function ProtectedRoute({ children, admin = false }) {
   const { user, loading, logout } = useAuth()
@@ -13,7 +14,7 @@ export default function ProtectedRoute({ children, admin = false }) {
     return (
       <div className="container page auth-page">
         <div className="card center">
-          <div className="big-icon">🔒</div>
+          <div className="big-icon"><Lock size={56} strokeWidth={1.5} /></div>
           <h1>Accès réservé à l'administrateur</h1>
           <p className="muted">Vous êtes connecté avec le compte client <strong>{user.email}</strong>.</p>
           <button

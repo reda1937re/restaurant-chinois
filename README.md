@@ -48,3 +48,8 @@ Dans `backend/app/config.py` :
 La devise affichée se change dans `frontend/src/api.js` (`CURRENCY`). Les tables du restaurant se définissent dans `backend/app/seed.py`.
 
 Pour remettre la base à zéro : `python -m app.seed --reset`.
+
+## Photos et icônes
+- Les photos des plats sont dans `backend/static/images/`. Elles viennent de Wikimedia Commons, sous licences libres ; les auteurs sont crédités dans [`CREDITS.md`](backend/static/images/CREDITS.md).
+- Sur une base déjà créée, `python -m app.seed --images` ajoute les photos aux plats qui n'en ont pas.
+- Les icônes viennent de [Lucide](https://lucide.dev) (`lucide-react`).

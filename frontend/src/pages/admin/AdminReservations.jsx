@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import api, { RESERVATION_STATUS, errorMessage } from '../../api'
+import { StickyNote } from 'lucide-react'
 
 export default function AdminReservations() {
   const [reservations, setReservations] = useState([])
@@ -41,7 +42,7 @@ export default function AdminReservations() {
                 <td>
                   <strong>{r.name}</strong>
                   <div className="muted small">{r.phone}{r.email && ` · ${r.email}`}</div>
-                  {r.note && <div className="small">📝 {r.note}</div>}
+                  {r.note && <div className="small with-icon"><StickyNote size={14} /> {r.note}</div>}
                 </td>
                 <td>{r.guests}</td>
                 <td>{r.table_number}</td>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import api, { CATEGORY_EMOJI, money } from '../api'
+import { ShoppingBag } from 'lucide-react'
+import api, { categoryIcon, money } from '../api'
 import DishCard from '../components/DishCard'
 import { useCart } from '../context/CartContext'
 
@@ -27,11 +28,14 @@ export default function Menu() {
 
       <div className="chips">
         <button className={active === 'all' ? 'chip active' : 'chip'} onClick={() => setActive('all')}>Tout</button>
-        {categories.map((c) => (
-          <button key={c.id} className={active === c.id ? 'chip active' : 'chip'} onClick={() => setActive(c.id)}>
-            {CATEGORY_EMOJI[c.name]} {c.name}
-          </button>
-        ))}
+        {categories.map((c) => {
+          const Icon = categoryIcon(c.name)
+          return (
+            <button key={c.id} className={active === c.id ? 'chip active' : 'chip'} onClick={() => setActive(c.id)}>
+              <Icon size={16} /> {c.name}
+            </button>
+          )
+        })}
       </div>
       <div className="filters">
         <label><input type="checkbox" checked={filter.veg} onChange={(e) => setFilter({ ...filter, veg: e.target.checked })} /> Végétarien</label>
@@ -41,11 +45,12 @@ export default function Menu() {
       {shown.map((cat) => {
         const list = visible.filter((d) => d.category_id === cat.id)
         if (list.length === 0) return null
+        const Icon = categoryIcon(cat.name)
         return (
           <section key={cat.id} className="section">
-            <h2 className="section-title left">{CATEGORY_EMOJI[cat.name]} {cat.name}</h2>
+            <h2 className="section-title left with-icon"><Icon size={26} /> {cat.name}</h2>
             <div className="dish-grid">
-              {list.map((d) => <DishCard key={d.id} dish={d} emoji={CATEGORY_EMOJI[cat.name]} />)}
+              {list.map((d) => <DishCard key={d.id} dish={d} category={cat.name} />)}
             </div>
           </section>
         )
@@ -53,7 +58,7 @@ export default function Menu() {
 
       {count > 0 && (
         <Link to="/panier" className="floating-cart">
-          🛒 {count} article{count > 1 ? 's' : ''} · {money(subtotal)} — Voir le panier
+          <ShoppingBag size={18} /> {count} article{count > 1 ? 's' : ''} · {money(subtotal)} — Voir le panier
         </Link>
       )}
     </div>

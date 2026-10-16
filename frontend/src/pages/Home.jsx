@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import api, { CATEGORY_EMOJI } from '../api'
+import { Bike, CalendarCheck, ChefHat } from 'lucide-react'
+import api from '../api'
 import DishCard from '../components/DishCard'
 
 const SIGNATURES = ['Canard laqué', 'Xiao long bao', 'Poulet Kung Pao']
@@ -33,17 +34,17 @@ export default function Home() {
 
       <section className="container features">
         <div className="feature">
-          <span>🥢</span>
+          <span className="feature-icon"><ChefHat /></span>
           <h3>Fait maison</h3>
           <p className="muted">Nos raviolis et nouilles sont préparés chaque jour.</p>
         </div>
         <div className="feature">
-          <span>🛵</span>
+          <span className="feature-icon"><Bike /></span>
           <h3>Livraison rapide</h3>
           <p className="muted">Livraison offerte dès 30 €. Paiement à la livraison.</p>
         </div>
         <div className="feature">
-          <span>🏮</span>
+          <span className="feature-icon"><CalendarCheck /></span>
           <h3>Réservation en ligne</h3>
           <p className="muted">Votre table confirmée en quelques secondes.</p>
         </div>
@@ -53,7 +54,7 @@ export default function Home() {
         <section className="container section">
           <h2 className="section-title">Nos spécialités</h2>
           <div className="dish-grid">
-            {signatures.map((d) => <DishCard key={d.id} dish={d} emoji={CATEGORY_EMOJI[catName(d.category_id)]} />)}
+            {signatures.map((d) => <DishCard key={d.id} dish={d} category={catName(d.category_id)} />)}
           </div>
           <div className="center"><Link to="/menu" className="btn">Voir tout le menu</Link></div>
         </section>

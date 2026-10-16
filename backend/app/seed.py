@@ -1,14 +1,27 @@
 """Remplit la base avec un menu d'exemple, les tables et un compte admin.
 
-Usage : python -m app.seed   (ajoutez --reset pour tout effacer avant)
+Usage : python -m app.seed            (ajoutez --reset pour tout effacer avant)
+        python -m app.seed --images   (ajoute les photos aux plats d'une base existante)
 """
+import re
 import sys
+import unicodedata
+from pathlib import Path
 
 from sqlalchemy import select
 
 from . import models
 from .auth import hash_password
 from .database import Base, SessionLocal, engine
+
+IMAGES_DIR = Path(__file__).resolve().parent.parent / "static" / "images"
+
+
+def image_for(dish_name: str) -> str:
+    """Photo du plat dans static/images (nom de fichier = nom du plat sans accents), ou chaîne vide."""
+    ascii_name = unicodedata.normalize("NFKD", dish_name.replace("œ", "oe")).encode("ascii", "ignore").decode()
+    slug = re.sub(r"[^a-z0-9]+", "-", ascii_name.lower()).strip("-")
+    return f"/static/images/{slug}.jpg" if (IMAGES_DIR / f"{slug}.jpg").exists() else ""
 
 MENU = {
     "Entrées": [
@@ -71,7 +84,9 @@ def seed(reset: bool = False) -> None:
             db.add(category)
             for name, desc, price, spicy, veg in dishes:
                 category.dishes.append(
-                    models.Dish(name=name, description=desc, price=price, spicy=spicy, vegetarian=veg)
+                    models.Dish(
+                        name=name, description=desc, price=price, spicy=spicy, vegetarian=veg, image=image_for(name)
+                    )
                 )
         for number, capacity in TABLES:
             db.add(models.DiningTable(number=number, capacity=capacity))
@@ -87,5 +102,23 @@ def seed(reset: bool = False) -> None:
         db.close()
 
 
+def add_images() -> None:
+    """Ajoute les photos aux plats qui n'en ont pas encore, sans toucher au reste de la base."""
+    db = SessionLocal()
+    try:
+        updated = 0
+        for dish in db.scalars(select(models.Dish).where(models.Dish.image == "")):
+            if image := image_for(dish.name):
+                dish.image = image
+                updated += 1
+        db.commit()
+        print(f"Photos ajoutées à {updated} plat(s).")
+    finally:
+        db.close()
+
+
 if __name__ == "__main__":
-    seed(reset="--reset" in sys.argv)
+    if "--images" in sys.argv:
+        add_images()
+    else:
+        seed(reset="--reset" in sys.argv)

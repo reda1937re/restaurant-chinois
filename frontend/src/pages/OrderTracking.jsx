@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import api, { ORDER_STATUS, errorMessage, money } from '../api'
+import { Bike, Check } from 'lucide-react'
 
 const STEPS = ['reçue', 'en_préparation', 'en_livraison', 'livrée']
 
@@ -11,7 +12,7 @@ export function OrderProgress({ status }) {
     <ol className="progress">
       {STEPS.map((s, i) => (
         <li key={s} className={i <= current ? 'done' : ''}>
-          <span className="dot">{i < current ? '✓' : i + 1}</span>
+          <span className="dot">{i < current ? <Check size={18} /> : i + 1}</span>
           {ORDER_STATUS[s]}
         </li>
       ))}
@@ -57,7 +58,7 @@ export default function OrderTracking() {
     <div className="container page narrow">
       {order && isNew && (
         <div className="card success-card">
-          <div className="big-icon">🛵</div>
+          <div className="big-icon"><Bike size={56} strokeWidth={1.5} /></div>
           <h1>Merci pour votre commande !</h1>
           <p>Votre numéro de commande est <strong>#{order.id}</strong>. Gardez-le pour suivre la livraison.</p>
         </div>

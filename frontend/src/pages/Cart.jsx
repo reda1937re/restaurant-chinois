@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import api, { money } from '../api'
 import { useCart } from '../context/CartContext'
+import { ShoppingBag } from 'lucide-react'
 
 export function useDeliveryFee(subtotal) {
   const [info, setInfo] = useState({ fee: 3, free_threshold: 30 })
@@ -19,7 +20,7 @@ export default function Cart() {
   if (items.length === 0) {
     return (
       <div className="container page narrow center">
-        <div className="big-icon">🥡</div>
+        <div className="big-icon"><ShoppingBag size={56} strokeWidth={1.5} /></div>
         <h1>Votre panier est vide</h1>
         <Link to="/menu" className="btn">Découvrir le menu</Link>
       </div>

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import api, { errorMessage } from '../api'
 import { useAuth } from '../context/AuthContext'
+import { CalendarCheck } from 'lucide-react'
 
 // Créneaux de 11h30 à 22h00, toutes les 30 minutes
 const SLOTS = []
@@ -47,7 +48,7 @@ export default function Reservation() {
     return (
       <div className="container page narrow">
         <div className="card success-card">
-          <div className="big-icon">🏮</div>
+          <div className="big-icon"><CalendarCheck size={56} strokeWidth={1.5} /></div>
           <h1>Demande de réservation envoyée !</h1>
           <p>
             Merci {done.name}. Table n°{done.table_number} pour <strong>{done.guests} personne{done.guests > 1 ? 's' : ''}</strong>,

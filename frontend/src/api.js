@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { CakeSlice, CookingPot, CupSoda, Drumstick, Salad, Soup, UtensilsCrossed, Wheat } from 'lucide-react'
 
 export const CURRENCY = '€'
 export const money = (n) => `${Number(n).toFixed(2).replace('.', ',')} ${CURRENCY}`
@@ -33,14 +34,15 @@ export const RESERVATION_STATUS = {
   'annulée': 'Annulée',
 }
 
-export const CATEGORY_EMOJI = {
-  'Entrées': '🥟',
-  'Dim Sum': '🥢',
-  'Nouilles': '🍜',
-  'Riz': '🍚',
-  'Plats': '🦆',
-  'Desserts': '🍡',
-  'Boissons': '🍵',
+export const CATEGORY_ICON = {
+  'Entrées': Salad,
+  'Dim Sum': CookingPot,
+  'Nouilles': Soup,
+  'Riz': Wheat,
+  'Plats': Drumstick,
+  'Desserts': CakeSlice,
+  'Boissons': CupSoda,
 }
+export const categoryIcon = (name) => CATEGORY_ICON[name] || UtensilsCrossed
 
 export default api

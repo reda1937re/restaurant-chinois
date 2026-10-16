@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
+import { Menu, ShoppingBag, X } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import { useCart } from '../context/CartContext'
 
@@ -16,7 +17,7 @@ export default function Navbar() {
         <Link to="/" className="brand" onClick={close}>
           <span className="brand-mark">龍</span> Le Dragon d'Or
         </Link>
-        <button className="burger" aria-label="Menu" onClick={() => setOpen(!open)}>☰</button>
+        <button className="burger" aria-label="Menu" onClick={() => setOpen(!open)}>{open ? <X /> : <Menu />}</button>
         <nav className={open ? 'nav-links open' : 'nav-links'} onClick={close}>
           <NavLink to="/menu">Menu</NavLink>
           <NavLink to="/reservation">Réserver</NavLink>
@@ -31,7 +32,7 @@ export default function Navbar() {
             <NavLink to="/connexion">Connexion</NavLink>
           )}
           <NavLink to="/panier" className="cart-link">
-            🛒 Panier {count > 0 && <span className="badge">{count}</span>}
+            <ShoppingBag size={18} /> Panier {count > 0 && <span className="badge">{count}</span>}
           </NavLink>
         </nav>
       </div>

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import api, { ORDER_STATUS, errorMessage, money } from '../../api'
+import { ArrowRight, MapPin, Phone, StickyNote } from 'lucide-react'
 
 const NEXT = { 'reçue': 'en_préparation', 'en_préparation': 'en_livraison', 'en_livraison': 'livrée' }
 
@@ -44,10 +45,10 @@ export default function AdminOrders() {
               <span className={`status status-${o.status}`}>{ORDER_STATUS[o.status]}</span>
             </div>
             <div className="muted small">
-              {new Date(o.created_at).toLocaleString('fr-FR')} · 📞 <a href={`tel:${o.phone}`}>{o.phone}</a>
+              {new Date(o.created_at).toLocaleString('fr-FR')} · <Phone size={14} className="inline-icon" /> <a href={`tel:${o.phone}`}>{o.phone}</a>
             </div>
-            <div className="small">📍 {o.address}</div>
-            {o.note && <div className="small">📝 {o.note}</div>}
+            <div className="small with-icon"><MapPin size={14} /> {o.address}</div>
+            {o.note && <div className="small with-icon"><StickyNote size={14} /> {o.note}</div>}
             <ul className="items">
               {o.items.map((i) => <li key={i.dish_id}>{i.quantity} × {i.dish_name}</li>)}
             </ul>
@@ -56,7 +57,7 @@ export default function AdminOrders() {
               <div className="btn-row">
                 {NEXT[o.status] && (
                   <button className="btn btn-sm" onClick={() => setOrderStatus(o.id, NEXT[o.status])}>
-                    → {ORDER_STATUS[NEXT[o.status]]}
+                    <ArrowRight size={16} /> {ORDER_STATUS[NEXT[o.status]]}
                   </button>
                 )}
                 {!['livrée', 'annulée'].includes(o.status) && (

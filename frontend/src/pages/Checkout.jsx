@@ -4,6 +4,7 @@ import api, { errorMessage, money } from '../api'
 import { useAuth } from '../context/AuthContext'
 import { useCart } from '../context/CartContext'
 import { useDeliveryFee } from './Cart'
+import { Banknote } from 'lucide-react'
 
 export default function Checkout() {
   const { user } = useAuth()
@@ -56,7 +57,7 @@ export default function Checkout() {
             <textarea name="note" rows={2} value={form.note} onChange={update} placeholder="Sans coriandre, sonner deux fois…" />
           </label>
           <div className="payment-box">
-            <strong>💵 Paiement à la livraison</strong>
+            <strong className="with-icon"><Banknote size={20} /> Paiement à la livraison</strong>
             <p className="muted small">En espèces ou par carte auprès du livreur.</p>
           </div>
           {error && <p className="alert">{error}</p>}
