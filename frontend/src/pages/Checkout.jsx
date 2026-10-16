@@ -4,7 +4,8 @@ import api, { errorMessage, money } from '../api'
 import { useAuth } from '../context/AuthContext'
 import { useCart } from '../context/CartContext'
 import { useDeliveryFee } from './Cart'
-import { Banknote } from 'lucide-react'
+import { Banknote, MapPin } from 'lucide-react'
+import LocationPicker from '../components/LocationPicker'
 
 export default function Checkout() {
   const { user } = useAuth()
@@ -12,6 +13,7 @@ export default function Checkout() {
   const { fee } = useDeliveryFee(subtotal)
   const navigate = useNavigate()
   const [form, setForm] = useState({ name: user?.name || '', phone: user?.phone || '', address: '', note: '' })
+  const [location, setLocation] = useState(null) // { lat, lng }
   const [error, setError] = useState('')
   const [sending, setSending] = useState(false)
 
@@ -19,13 +21,25 @@ export default function Checkout() {
 
   const update = (e) => setForm({ ...form, [e.target.name]: e.target.value })
 
+  // Point choisi sur la carte : l'adresse trouvée remplit le champ (modifiable ensuite)
+  const onLocation = ({ lat, lng, address }) => {
+    setLocation({ lat, lng })
+    if (address) setForm((f) => ({ ...f, address }))
+  }
+
   const submit = async (e) => {
     e.preventDefault()
+    if (!location) {
+      setError('Indiquez le point de livraison sur la carte.')
+      return
+    }
     setError('')
     setSending(true)
     try {
       const { data } = await api.post('/orders', {
         ...form,
+        latitude: location.lat,
+        longitude: location.lng,
         items: items.map((i) => ({ dish_id: i.id, quantity: i.quantity })),
       })
       clear()
@@ -50,8 +64,12 @@ export default function Checkout() {
               <input name="phone" type="tel" value={form.phone} onChange={update} required minLength={6} />
             </label>
           </div>
+          <div className="field">
+            <span className="field-label with-icon"><MapPin size={16} /> Emplacement de livraison</span>
+            <LocationPicker value={location} onChange={onLocation} />
+          </div>
           <label>Adresse de livraison
-            <textarea name="address" rows={2} value={form.address} onChange={update} required minLength={5} placeholder="N°, rue, code postal, ville, étage, digicode…" />
+            <textarea name="address" rows={2} value={form.address} onChange={update} required minLength={5} placeholder="Remplie depuis la carte — ajoutez étage, digicode…" />
           </label>
           <label>Instructions (facultatif)
             <textarea name="note" rows={2} value={form.note} onChange={update} placeholder="Sans coriandre, sonner deux fois…" />

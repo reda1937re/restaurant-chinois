@@ -69,6 +69,8 @@ class Order(Base):
     name: Mapped[str] = mapped_column(String(100))
     phone: Mapped[str] = mapped_column(String(30))
     address: Mapped[str] = mapped_column(Text)
+    latitude: Mapped[float | None] = mapped_column(Float, nullable=True)
+    longitude: Mapped[float | None] = mapped_column(Float, nullable=True)
     note: Mapped[str] = mapped_column(Text, default="")
     subtotal: Mapped[float] = mapped_column(Float)
     delivery_fee: Mapped[float] = mapped_column(Float)

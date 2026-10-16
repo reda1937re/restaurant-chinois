@@ -238,3 +238,29 @@ input[type='checkbox'] { width: auto; accent-color: var(--red); }
   .hero { padding: 64px 0 80px; }
   .progress { font-size: .7rem; }
 }
+
+/* Carte de livraison */
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field-label { font-weight: 500; font-size: .92rem; }
+.location-picker { display: flex; flex-direction: column; gap: 8px; }
+.map-toolbar { display: flex; gap: 8px; flex-wrap: wrap; }
+.map-search { display: flex; gap: 6px; flex: 1; min-width: 200px; }
+.map-search input { flex: 1; }
+.map-results { list-style: none; margin: 0; padding: 4px; border: 1px solid var(--line); border-radius: 10px; background: var(--paper); max-height: 200px; overflow-y: auto; }
+.map-results button { width: 100%; text-align: left; background: none; border: 0; padding: 8px 10px; border-radius: 8px; font: inherit; font-size: .88rem; cursor: pointer; color: var(--ink); }
+.map-results button:hover { background: var(--cream); }
+.map-frame { position: relative; }
+.map { height: 300px; width: 100%; border-radius: 12px; border: 1px solid var(--line); z-index: 0; }
+.map-hint {
+  position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 500;
+  background: rgba(42,26,20,.85); color: #fff; padding: 6px 14px; border-radius: 999px;
+  font-size: .82rem; pointer-events: none; white-space: nowrap;
+}
+.map-pin { background: none; border: 0; }
+.delivery-map { margin-top: 10px; }
+.spin { animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (max-width: 560px) {
+  .map { height: 260px; }
+  .map-hint { white-space: normal; text-align: center; width: 85%; }
+}

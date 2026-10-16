@@ -1,12 +1,14 @@
 import { useCallback, useEffect, useState } from 'react'
 import api, { ORDER_STATUS, errorMessage, money } from '../../api'
-import { ArrowRight, MapPin, Phone, StickyNote } from 'lucide-react'
+import { ArrowRight, Map as MapIcon, MapPin, Navigation, Phone, StickyNote } from 'lucide-react'
+import DeliveryMap, { directionsUrl } from '../../components/DeliveryMap'
 
 const NEXT = { 'reçue': 'en_préparation', 'en_préparation': 'en_livraison', 'en_livraison': 'livrée' }
 
 export default function AdminOrders() {
   const [orders, setOrders] = useState([])
   const [status, setStatus] = useState('')
+  const [openMaps, setOpenMaps] = useState({}) // id commande -> carte affichée
 
   const load = useCallback(() => {
     api.get('/admin/orders', { params: status ? { status } : {} }).then((r) => setOrders(r.data))
@@ -48,6 +50,19 @@ export default function AdminOrders() {
               {new Date(o.created_at).toLocaleString('fr-FR')} · <Phone size={14} className="inline-icon" /> <a href={`tel:${o.phone}`}>{o.phone}</a>
             </div>
             <div className="small with-icon"><MapPin size={14} /> {o.address}</div>
+            {o.latitude != null && (
+              <>
+                <div className="btn-row">
+                  <button className="btn btn-sm btn-outline" onClick={() => setOpenMaps((m) => ({ ...m, [o.id]: !m[o.id] }))}>
+                    <MapIcon size={16} /> {openMaps[o.id] ? 'Masquer la carte' : 'Voir sur la carte'}
+                  </button>
+                  <a className="btn btn-sm btn-outline" href={directionsUrl(o.latitude, o.longitude)} target="_blank" rel="noreferrer">
+                    <Navigation size={16} /> Itinéraire
+                  </a>
+                </div>
+                {openMaps[o.id] && <DeliveryMap lat={o.latitude} lng={o.longitude} height={220} />}
+              </>
+            )}
             {o.note && <div className="small with-icon"><StickyNote size={14} /> {o.note}</div>}
             <ul className="items">
               {o.items.map((i) => <li key={i.dish_id}>{i.quantity} × {i.dish_name}</li>)}

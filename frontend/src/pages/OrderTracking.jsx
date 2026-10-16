@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import api, { ORDER_STATUS, errorMessage, money } from '../api'
 import { Bike, Check } from 'lucide-react'
+import DeliveryMap from '../components/DeliveryMap'
 
 const STEPS = ['reçue', 'en_préparation', 'en_livraison', 'livrée']
 
@@ -98,6 +99,7 @@ export default function OrderTracking() {
             <div className="grand"><span>Total à payer à la livraison</span><span>{money(order.total)}</span></div>
           </div>
           <p className="muted small">Adresse : {order.address}</p>
+          <DeliveryMap lat={order.latitude} lng={order.longitude} height={180} />
         </div>
       )}
     </div>

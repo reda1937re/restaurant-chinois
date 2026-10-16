@@ -35,6 +35,7 @@ Site : http://localhost:5173
 | Menu par catégorie, filtres végétarien / non épicé | Tableau de bord (commandes en cours, réservations, CA du jour) |
 | Panier (sauvegardé dans le navigateur) | Commandes : faire avancer le statut, annuler |
 | Commande en livraison, paiement à la livraison | Réservations : confirmer / annuler, filtre par date |
+| Point de livraison choisi sur une carte (clic, repère déplaçable, « Ma position », recherche d'adresse) | Commandes : carte du point de livraison + lien « Itinéraire » |
 | Suivi de commande (n° + téléphone), actualisation auto | Menu : ajouter, modifier, supprimer, rendre indisponible |
 | Réservation avec attribution automatique de table | |
 | Compte optionnel : historique, annulation de réservation | |
@@ -45,7 +46,7 @@ Dans `backend/app/config.py` :
 - frais de livraison (3 €) et seuil de livraison offerte (30 €) ;
 - `SECRET_KEY` (à définir avec la variable d'environnement `SECRET_KEY` en production).
 
-La devise affichée se change dans `frontend/src/api.js` (`CURRENCY`). Les tables du restaurant se définissent dans `backend/app/seed.py`.
+La devise affichée se change dans `frontend/src/api.js` (`CURRENCY`). La position du restaurant (centre de la carte) se règle dans `frontend/src/components/LocationPicker.jsx` (`RESTAURANT_POSITION`). La carte utilise OpenStreetMap et la recherche d'adresse Nominatim : gratuits, sans clé, mais limités à un usage modéré (pour un vrai site à fort trafic, prévoir un fournisseur dédié). Les tables du restaurant se définissent dans `backend/app/seed.py`.
 
 Pour remettre la base à zéro : `python -m app.seed --reset`.
 

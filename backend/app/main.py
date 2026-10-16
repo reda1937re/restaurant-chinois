@@ -4,10 +4,11 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from .database import Base, engine
+from .database import Base, add_missing_columns, engine
 from .routers import admin, auth, menu, orders, reservations
 
 Base.metadata.create_all(bind=engine)
+add_missing_columns()
 
 app = FastAPI(title="Le Dragon d'Or — API")
 

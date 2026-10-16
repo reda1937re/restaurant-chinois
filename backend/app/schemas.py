@@ -95,6 +95,8 @@ class OrderIn(BaseModel):
     name: str = Field(min_length=2, max_length=100)
     phone: str = Field(min_length=6, max_length=30)
     address: str = Field(min_length=5)
+    latitude: float | None = Field(default=None, ge=-90, le=90)
+    longitude: float | None = Field(default=None, ge=-180, le=180)
     note: str = ""
     items: list[OrderItemIn] = Field(min_length=1)
 
@@ -111,6 +113,8 @@ class OrderOut(ORM):
     name: str
     phone: str
     address: str
+    latitude: float | None
+    longitude: float | None
     note: str
     subtotal: float
     delivery_fee: float

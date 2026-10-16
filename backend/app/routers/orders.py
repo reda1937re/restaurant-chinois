@@ -25,6 +25,7 @@ def create_order(
     order = models.Order(
         user_id=user.id if user else None,
         name=data.name, phone=data.phone, address=data.address, note=data.note,
+        latitude=data.latitude, longitude=data.longitude,
         subtotal=0, delivery_fee=0, total=0,
     )
     subtotal = 0.0
