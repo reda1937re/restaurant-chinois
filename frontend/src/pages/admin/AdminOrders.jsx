@@ -1,0 +1,74 @@
+import { useCallback, useEffect, useState } from 'react'
+import api, { ORDER_STATUS, errorMessage, money } from '../../api'
+
+const NEXT = { 'reçue': 'en_préparation', 'en_préparation': 'en_livraison', 'en_livraison': 'livrée' }
+
+export default function AdminOrders() {
+  const [orders, setOrders] = useState([])
+  const [status, setStatus] = useState('')
+
+  const load = useCallback(() => {
+    api.get('/admin/orders', { params: status ? { status } : {} }).then((r) => setOrders(r.data))
+  }, [status])
+
+  useEffect(() => {
+    load()
+    const t = setInterval(load, 15000) // nouvelles commandes
+    return () => clearInterval(t)
+  }, [load])
+
+  const setOrderStatus = async (id, newStatus) => {
+    try {
+      const { data } = await api.patch(`/admin/orders/${id}`, { status: newStatus })
+      setOrders((list) => list.map((o) => (o.id === id ? data : o)))
+    } catch (err) {
+      alert(errorMessage(err))
+    }
+  }
+
+  return (
+    <>
+      <div className="admin-head">
+        <h1 className="page-title left">Commandes</h1>
+        <select value={status} onChange={(e) => setStatus(e.target.value)}>
+          <option value="">Tous les statuts</option>
+          {Object.entries(ORDER_STATUS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+        </select>
+      </div>
+      {orders.length === 0 && <p className="muted">Aucune commande.</p>}
+      <div className="list">
+        {orders.map((o) => (
+          <div key={o.id} className="card admin-order">
+            <div className="order-head">
+              <strong>#{o.id} · {o.name}</strong>
+              <span className={`status status-${o.status}`}>{ORDER_STATUS[o.status]}</span>
+            </div>
+            <div className="muted small">
+              {new Date(o.created_at).toLocaleString('fr-FR')} · 📞 <a href={`tel:${o.phone}`}>{o.phone}</a>
+            </div>
+            <div className="small">📍 {o.address}</div>
+            {o.note && <div className="small">📝 {o.note}</div>}
+            <ul className="items">
+              {o.items.map((i) => <li key={i.dish_id}>{i.quantity} × {i.dish_name}</li>)}
+            </ul>
+            <div className="order-head">
+              <strong>{money(o.total)} <span className="muted small">(à encaisser)</span></strong>
+              <div className="btn-row">
+                {NEXT[o.status] && (
+                  <button className="btn btn-sm" onClick={() => setOrderStatus(o.id, NEXT[o.status])}>
+                    → {ORDER_STATUS[NEXT[o.status]]}
+                  </button>
+                )}
+                {!['livrée', 'annulée'].includes(o.status) && (
+                  <button className="btn btn-sm btn-outline" onClick={() => confirm('Annuler cette commande ?') && setOrderStatus(o.id, 'annulée')}>
+                    Annuler
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </>
+  )
+}
